@@ -1,0 +1,202 @@
+CREATE TABLE wp_comments
+(
+	comment_ID           INTEGER  NOT NULL ,
+	comment_author       VARCHAR2(100)  NULL ,
+	comment_author_email VARCHAR2(100)  NULL ,
+	comment_author_url   VARCHAR2(200)  NULL ,
+	comment_author_IP    VARCHAR2(20)  NULL ,
+	comment_date         NCLOB  NULL ,
+	comment_date_gmt     NCLOB  NULL ,
+	comment_content      CLOB  NULL ,
+	comment_karma        INTEGER  NULL ,
+	comment_aproved      VARCHAR2(20)  NULL ,
+	comment_agent        VARCHAR2(20)  NULL ,
+	comment_type         VARCHAR2(20)  NULL ,
+	comment_parent       INTEGER  NULL ,
+	user_id              INTEGER  NULL ,
+	comment_post_id      INTEGER  NULL 
+);
+
+ALTER TABLE wp_comments
+	ADD CONSTRAINT  XPKwp_comments PRIMARY KEY (comment_ID);
+
+CREATE TABLE wp_commentmeta
+(
+	meta_id              INTEGER  NOT NULL ,
+	meta_key             VARCHAR2(255)  NULL ,
+	meta_value           CLOB  NULL ,
+	comment_ID           INTEGER  NULL 
+);
+
+ALTER TABLE wp_commentmeta
+	ADD CONSTRAINT  XPKwp_commentmeta PRIMARY KEY (meta_id);
+
+CREATE TABLE wp_links
+(
+	link_id              INTEGER  NOT NULL ,
+	link_url             VARCHAR2(20)  NULL ,
+	link_name            VARCHAR2(20)  NULL ,
+	link_image           VARCHAR2(20)  NULL ,
+	link_target          VARCHAR2(20)  NULL ,
+	link_description     VARCHAR2(20)  NULL ,
+	link_visible         VARCHAR2(20)  NULL ,
+	link_owner           INTEGER  NULL ,
+	link_rating          INTEGER  NULL ,
+	link_updated         NCLOB  NULL ,
+	link_rel             VARCHAR2(20)  NULL ,
+	link_notes           CHARACTER VARYING  NULL ,
+	link_rss             VARCHAR2(20)  NULL 
+);
+
+ALTER TABLE wp_links
+	ADD CONSTRAINT  XPKwp_links PRIMARY KEY (link_id);
+
+CREATE TABLE wp_options
+(
+	option_id            INTEGER  NOT NULL ,
+	option_name          VARCHAR2(191)  NULL ,
+	option_value         CLOB  NULL ,
+	autoload             VARCHAR2(20)  NULL 
+);
+
+ALTER TABLE wp_options
+	ADD CONSTRAINT  XPKwp_options PRIMARY KEY (option_id);
+
+CREATE TABLE wp_posts
+(
+	ID                   INTEGER  NOT NULL ,
+	post_date            NCLOB  NULL ,
+	post_date_gmt        NCLOB  NULL ,
+	post_content         CLOB  NULL ,
+	post_title           VARCHAR2()  NULL ,
+	post_excerpt         VARCHAR2(20)  NULL ,
+	post_status          VARCHAR2(20)  NULL ,
+	comment_status       VARCHAR2(20)  NULL ,
+	ping_status          VARCHAR2(20)  NULL ,
+	post_password        VARCHAR2(255)  NULL ,
+	post_name            VARCHAR2(200)  NULL ,
+	to_ping              CHARACTER VARYING  NULL ,
+	pinged               CHARACTER VARYING  NULL ,
+	post_modified        NCLOB  NULL ,
+	post_modified_gmt    NCLOB  NULL ,
+	post_content_filtered CLOB  NULL ,
+	post_parent          INTEGER  NULL ,
+	guid                 VARCHAR2(20)  NULL ,
+	menu_order           INTEGER  NULL ,
+	post_type            VARCHAR2(20)  NULL ,
+	post_mime_type       VARCHAR2(20)  NULL ,
+	comment_count        INTEGER  NULL ,
+	post_author_id       INTEGER  NULL 
+);
+
+ALTER TABLE wp_posts
+	ADD CONSTRAINT  XPKwp_posts PRIMARY KEY (ID);
+
+CREATE TABLE wp_postmeta
+(
+	meta_id              INTEGER  NOT NULL ,
+	meta_key             VARCHAR2(20)  NULL ,
+	meta_value           CLOB  NULL ,
+	post_id              INTEGER  NULL 
+);
+
+ALTER TABLE wp_postmeta
+	ADD CONSTRAINT  XPKwp_postmeta PRIMARY KEY (meta_id);
+
+CREATE TABLE wp_term_taxonomy
+(
+	term_taxonomy_id     INTEGER  NOT NULL ,
+	taxonomy             VARCHAR2(20)  NULL ,
+	description          CLOB  NULL ,
+	parent               INTEGER  NULL ,
+	count                INTEGER  NULL ,
+	term_id              INTEGER  NULL 
+);
+
+ALTER TABLE wp_term_taxonomy
+	ADD CONSTRAINT  XPKwp_term_taxonomy PRIMARY KEY (term_taxonomy_id);
+
+CREATE TABLE wp_term_relationship
+(
+	term_taxonomy_id     INTEGER  NOT NULL ,
+	object_id            INTEGER  NOT NULL ,
+	term_order           INTEGER  NOT NULL 
+);
+
+ALTER TABLE wp_term_relationship
+	ADD CONSTRAINT  XPKwp_term_relationship PRIMARY KEY (term_taxonomy_id,object_id);
+
+CREATE TABLE wp_terms
+(
+	term_id              INTEGER  NOT NULL ,
+	name                 VARCHAR2(200)  NULL ,
+	slug                 VARCHAR2(200)  NULL ,
+	term_group           INTEGER  NULL 
+);
+
+ALTER TABLE wp_terms
+	ADD CONSTRAINT  XPKwp_terms PRIMARY KEY (term_id);
+
+CREATE TABLE wp_users
+(
+	ID                   INTEGER  NOT NULL ,
+	user_login           VARCHAR2(60)  NULL ,
+	user_pass            VARCHAR2(255)  NULL ,
+	user_nicename        VARCHAR2(50)  NULL ,
+	user_email           VARCHAR2(100)  NULL ,
+	user_url             VARCHAR2(20)  NULL ,
+	user_registered      NCLOB  NULL ,
+	user_activation_key  VARCHAR2(20)  NULL ,
+	user_status          INTEGER  NULL ,
+	display_name         VARCHAR2(250)  NULL 
+);
+
+ALTER TABLE wp_users
+	ADD CONSTRAINT  XPKwp_users PRIMARY KEY (ID);
+
+CREATE TABLE wp_usermeta
+(
+	umeta_id             INTEGER  NOT NULL ,
+	meta_key             VARCHAR2(20)  NULL ,
+	meta_value           CLOB  NULL ,
+	user_ID              INTEGER  NULL 
+);
+
+ALTER TABLE wp_usermeta
+	ADD CONSTRAINT  XPKwp_usermeta PRIMARY KEY (umeta_id);
+
+ALTER TABLE wp_comments
+	ADD (
+CONSTRAINT R_3 FOREIGN KEY (comment_post_id) REFERENCES wp_posts (ID) ON DELETE SET NULL);
+
+ALTER TABLE wp_commentmeta
+	ADD (
+CONSTRAINT R_4 FOREIGN KEY (comment_ID) REFERENCES wp_comments (comment_ID) ON DELETE SET NULL);
+
+ALTER TABLE wp_posts
+	ADD (
+CONSTRAINT R_2 FOREIGN KEY (post_author_id) REFERENCES wp_users (ID) ON DELETE SET NULL);
+
+ALTER TABLE wp_postmeta
+	ADD (
+CONSTRAINT R_5 FOREIGN KEY (post_id) REFERENCES wp_posts (ID) ON DELETE SET NULL);
+
+ALTER TABLE wp_term_taxonomy
+	ADD (
+CONSTRAINT R_10 FOREIGN KEY (term_id) REFERENCES wp_terms (term_id) ON DELETE SET NULL);
+
+ALTER TABLE wp_term_relationship
+	ADD (
+CONSTRAINT R_7 FOREIGN KEY (term_taxonomy_id) REFERENCES wp_term_taxonomy (term_taxonomy_id));
+
+ALTER TABLE wp_term_relationship
+	ADD (
+CONSTRAINT R_8 FOREIGN KEY (object_id) REFERENCES wp_posts (ID));
+
+ALTER TABLE wp_term_relationship
+	ADD (
+CONSTRAINT R_9 FOREIGN KEY (term_order) REFERENCES wp_links (link_id));
+
+ALTER TABLE wp_usermeta
+	ADD (
+CONSTRAINT R_6 FOREIGN KEY (user_ID) REFERENCES wp_users (ID) ON DELETE SET NULL);
