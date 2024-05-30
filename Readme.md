@@ -33,12 +33,19 @@ ii. Integridad de Datos (Constraints)
 9. Conclusión 
 10. Anexos
 11. Bibliografía/Referencias
+
 II. Manual de Usuario
+
 Descripción técnica de la operación del sistema o aplicación
+
 Productos Entregables:
+
 • Manual Técnico
+
 • Manual de Usuario
+
 • Aplicación
+
 • Script’s de la Base de Datos
 
 # Integrantes del Equipo
